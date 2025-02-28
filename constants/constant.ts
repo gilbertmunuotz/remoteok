@@ -1,0 +1,1 @@
+export const SERVER_URI='https://tanair-backend-api.vercel.app/api';

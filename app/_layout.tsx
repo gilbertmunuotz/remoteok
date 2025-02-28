@@ -1,39 +1,68 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { StatusBar } from 'expo-status-bar';
-import { useEffect } from 'react';
-import 'react-native-reanimated';
-
-import { useColorScheme } from '@/hooks/useColorScheme';
-
-// Prevent the splash screen from auto-hiding before asset loading is complete.
-SplashScreen.preventAutoHideAsync();
+import "../global.css"
+import { Provider } from "react-redux"
+import { StatusBar } from "expo-status-bar"
+import { useState, useEffect } from "react"
+import { Stack, Redirect } from "expo-router"
+import Toast from 'react-native-toast-message';
+import { getToken } from "../utils/secureStore"
+import { persistor, store } from "@/library/store"
+import { PersistGate } from "redux-persist/integration/react"
+import { useColorScheme, View, ActivityIndicator } from "react-native"
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
-  const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-  });
+  const colorScheme = useColorScheme()
+
+  const [isLoading, setIsLoading] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
-    }
-  }, [loaded]);
+    const checkAuth = async () => {
 
-  if (!loaded) {
-    return null;
+      setIsLoading(true);
+
+      try {
+        const token = await getToken();
+        if (token) {
+          setIsAuthenticated(true);
+        } else {
+          setIsAuthenticated(false);;
+        }
+      } catch (error) {
+        console.error("Error checking auth", error);
+      } finally {
+        setIsLoading(false); // Always stop loading, whether or not a token exists
+      }
+    }
+    // Call the function Here
+    checkAuth()
+  }, [])
+
+  // Handle Loading State
+  if (isLoading) {
+    return (
+      <View className="flex-1 justify-center items-center">
+        <ActivityIndicator size="large" />
+      </View>
+    )
   }
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
-  );
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        <StatusBar style={colorScheme === "dark" ? "light" : "dark"} />
+
+
+        {/* Redirect users based on authentication */}
+        {isAuthenticated ? <Redirect href="/(tabs)" /> : <Redirect href="/auth" />}
+
+        <Stack>
+          <Stack.Screen name="auth" options={{ headerShown: false }} />
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen name="+not-found" />
+        </Stack>
+        <Toast />
+
+      </PersistGate>
+    </Provider>
+  )
 }

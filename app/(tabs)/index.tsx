@@ -1,74 +1,125 @@
-import { Image, StyleSheet, Platform } from 'react-native';
+import axios from "axios";
+import { useRouter } from 'expo-router';
+import { useEffect, useState } from 'react';
+import getCurrentMonthYear from '@/utils/date';
+import { ApiResponse, Job } from "@/Interfaces/interface";
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { View, Text, ScrollView, TouchableOpacity, Image } from 'react-native';
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+export default function Index() {
 
-export default function HomeScreen() {
-  return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12'
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
-  );
+    const router = useRouter();
+
+    const currentDate = getCurrentMonthYear();
+
+    const categories = ["Design", "Development", "Marketing", "Writing", "Data Science"];
+
+    const [jobs, setJobs] = useState<Job[]>([]);
+
+    useEffect(() => {
+        const fetchJobs = async () => {
+            try {
+                const { data } = await axios.get<ApiResponse>('https://remoteok.com/api');
+                const jobsArray = Object.values(data);
+                setJobs(jobsArray);
+            } catch (error) {
+                console.error('Error fetching jobs:', error);
+            };
+        }
+        fetchJobs();
+    }, []);
+
+
+    return (
+        <SafeAreaView className="flex-1 bg-white px-4">
+            <ScrollView showsVerticalScrollIndicator={false}>
+
+
+                {/* Greetings */}
+                <View className="mt-8">
+                    <Text className="text-4xl font-bold text-gray-900">👋 Welcome to RemoteOK</Text>
+                    <Text className="text-gray-600 text-2xl font-semibold">{currentDate}</Text>
+                </View>
+
+
+                {/* Hero Section  */}
+                <View className='mt-6 p-6 bg-blue-300 rounded-xl shadow-md'>
+                    <Text className="text-xl font-bold text-blue-900">Find Your Next Remote Job!</Text>
+                    <Text className="text-gray-700 mt-2">Browse thousands of remote jobs across various fields.</Text>
+                </View>
+
+
+                {/* Job Categories  */}
+                <Text className="text-lg font-semibold mt-6 mb-2">Popular Categories</Text>
+                <ScrollView horizontal showsHorizontalScrollIndicator={false} className='flex-row'>
+                    {categories.map((category, index) => (
+                        <View key={index} className='bg-gray-200 px-4 py-2 rounded-full mr-2'>
+                            <Text className='text-gray-700'>{category}</Text>
+                        </View>
+                    ))}
+                </ScrollView>
+
+
+                {/* Company Logos  */}
+                <View className="py-4">
+                    <Text className="text-lg font-semibold mt-6 mb-2">🏢 Featured Companies</Text>
+                    <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 16 }} className="flex-row px-4 space-x-5">
+                        {jobs.map((job, index) => {
+                            const jobKey = job.id ? job.id.toString() : `job-${index}`;
+
+                            return (
+                                <View key={jobKey} className="bg-white shadow-md rounded-xl p-4 w-52 h-52 flex items-center justify-center">
+                                    {
+                                        job.company_logo ? (
+                                            <Image
+                                                source={{ uri: job.company_logo }}
+                                                className="w-24 h-24"
+                                                resizeMode="contain"
+                                            />
+                                        ) : (
+                                            <Text key={jobKey} className="text-center text-gray-600">{job.company}</Text>
+                                        )}
+                                </View>
+                            )
+                        })}
+
+                    </ScrollView>
+                </View>
+
+                {/* Highest Paying  */}
+                <View className="bg-gray-100 p-4 rounded-xl shadow-md mt-6">
+                    <Text className="text-lg font-semibold my-4">💰 Top Paying Jobs</Text>
+                    {jobs.filter((job) => job.salary_max).sort((a, b) => b.salary_max! - a.salary_max!).slice(0,3)
+                        .map((job) => (
+                            <TouchableOpacity
+                                key={job.id}
+                                className="bg-white shadow-md rounded-xl p-4 mb-3"
+                                onPress={() => router.push(`/job/${job.id}`)}>
+                                <View className="flex-row items-center">
+                                    {job.company_logo && (
+                                        <Image
+                                            source={{ uri: job.company_logo }}
+                                            className="w-12 h-12 rounded-lg mr-3"
+                                            resizeMode="contain"
+                                        />
+                                    )}
+                                    <View>
+                                        <Text className="text-base font-semibold">{job.position}</Text>
+                                        <Text className="text-gray-600">{job.company}</Text>
+                                        <Text className="text-green-600 font-bold">💲 ${job.salary_min?.toLocaleString()} - ${job.salary_max?.toLocaleString()}</Text>
+                                    </View>
+                                </View>
+                            </TouchableOpacity>
+                        ))
+                    }
+                </View>
+
+
+                {/* Explore Button */}
+                <TouchableOpacity className="bg-blue-500 px-4 py-3 rounded-full mt-6" onPress={() => router.push('/jobs')}>
+                    <Text className="text-white text-center text-lg font-semibold">Explore Jobs</Text>
+                </TouchableOpacity>
+            </ScrollView>
+        </SafeAreaView >
+    );
 }
-
-const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
-  },
-});
