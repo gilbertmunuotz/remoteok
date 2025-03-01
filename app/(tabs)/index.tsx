@@ -63,12 +63,12 @@ export default function Index() {
                 {/* Company Logos  */}
                 <View className="py-4">
                     <Text className="text-lg font-semibold mt-6 mb-2">🏢 Featured Companies</Text>
-                    <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 16 }} className="flex-row px-4 space-x-5">
+                    <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 16 }} className="flex-row p-4 space-x-5">
                         {jobs.map((job, index) => {
                             const jobKey = job.id ? job.id.toString() : `job-${index}`;
 
                             return (
-                                <View key={jobKey} className="bg-white shadow-md rounded-xl p-4 w-52 h-52 flex items-center justify-center">
+                                <View key={jobKey} className="bg-white shadow-md drop-shadow-lg rounded-xl mx-2 w-52 h-52 flex items-center justify-center">
                                     {
                                         job.company_logo ? (
                                             <Image
@@ -89,7 +89,7 @@ export default function Index() {
                 {/* Highest Paying  */}
                 <View className="bg-gray-100 p-4 rounded-xl shadow-md mt-6">
                     <Text className="text-lg font-semibold my-4">💰 Top Paying Jobs</Text>
-                    {jobs.filter((job) => job.salary_max).sort((a, b) => b.salary_max! - a.salary_max!).slice(0,3)
+                    {jobs.filter((job) => job.salary_max).sort((a, b) => b.salary_max! - a.salary_max!).slice(0, 3)
                         .map((job) => (
                             <TouchableOpacity
                                 key={job.id}
@@ -116,7 +116,10 @@ export default function Index() {
 
 
                 {/* Explore Button */}
-                <TouchableOpacity className="bg-blue-500 px-4 py-3 rounded-full mt-6" onPress={() => router.push('/jobs')}>
+                <TouchableOpacity className="bg-blue-500 px-4 py-3 rounded-full mt-6" onPress={() => {
+                    console.log("Navigating to Jobs...");
+                    router.push('/jobs');
+                }}>
                     <Text className="text-white text-center text-lg font-semibold">Explore Jobs</Text>
                 </TouchableOpacity>
             </ScrollView>
