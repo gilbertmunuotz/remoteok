@@ -52,7 +52,7 @@ export default function BottomTabNav() {
             <Tab.Screen
                 name="Profile"
                 component={Profile}
-                options={{ headerTitle: '' }}
+                options={{ headerShown: false }}
             />
         </Tab.Navigator>
     );
