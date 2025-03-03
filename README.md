@@ -15,7 +15,7 @@ npm install
 You will need to start **Metro**, the JavaScript _bundler_ that ships _with_ React Native.
 
 ```bash
- npx expo start
+npx expo start
 ```
 
 In the output, you'll find options to open the app in a
@@ -25,7 +25,8 @@ In the output, you'll find options to open the app in a
 - [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
 - [Expo Go](https://expo.dev/go)
 
-## For Android Devices 
+## For Android Devices
+
 Start app by running
 
 ```bash
@@ -39,6 +40,7 @@ yarn android
 ```
 
 ## For IOS Devices
+
 Start app by running
 
 ```bash
