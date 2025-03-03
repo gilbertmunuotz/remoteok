@@ -21,6 +21,7 @@ interface Job {
     company_logo?: string; // Optional since some jobs may not have a logo
     position: string;
     tags: string[];
+    location: string;
     description: string;
     salary_min?: number;
     salary_max?: number;

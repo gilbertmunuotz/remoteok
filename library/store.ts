@@ -1,8 +1,9 @@
+import { jobsAPI } from '@/api/jobAPI';
 import { authAPI } from '@/api/authAPI';
+import authSlice from "../config/authSlice";
+import { persistReducer, persistStore } from "redux-persist";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
-import { persistReducer, persistStore } from "redux-persist";
-import authSlice from "../config/authSlice";
 
 
 // Persist configuration for auth slice
@@ -15,6 +16,7 @@ const authPersistConfig = {
 const rootReducer = combineReducers({
     authState: persistReducer(authPersistConfig, authSlice), // Only persist the auth slice
     [authAPI.reducerPath]: authAPI.reducer, // Add authSlice reducer to the rootReducer
+    [jobsAPI.reducerPath]: jobsAPI.reducer, // Add jobsAPI reducer to the rootReducer
 });
 
 // Create and export the store
@@ -26,7 +28,8 @@ export const store = configureStore({
             serializableCheck: {
                 ignoredActions: ['persist/PERSIST', 'persist/REHYDRATE']
             },
-        }).concat(authAPI.middleware) // Middleware for caching,
+        }).concat(authAPI.middleware, jobsAPI.middleware), // Middleware for caching,
+    devTools: process.env.NODE_ENV !== 'production',
 });
 
 

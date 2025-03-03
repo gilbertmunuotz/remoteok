@@ -1,10 +1,8 @@
-import axios from "axios";
 import { useRouter } from 'expo-router';
-import { useEffect, useState } from 'react';
 import getCurrentMonthYear from '@/utils/date';
-import { ApiResponse, Job } from "@/Interfaces/interface";
+import { useGetJobsQuery } from '@/api/jobAPI';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { View, Text, ScrollView, TouchableOpacity, Image } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
 
 export default function Index() {
 
@@ -14,21 +12,27 @@ export default function Index() {
 
     const categories = ["Design", "Development", "Marketing", "Writing", "Data Science"];
 
-    const [jobs, setJobs] = useState<Job[]>([]);
+    // Destructure rtk Hook
+    const { data: jobs = [], isLoading, isError } = useGetJobsQuery();;
 
-    useEffect(() => {
-        const fetchJobs = async () => {
-            try {
-                const { data } = await axios.get<ApiResponse>('https://remoteok.com/api');
-                const jobsArray = Object.values(data);
-                setJobs(jobsArray);
-            } catch (error) {
-                console.error('Error fetching jobs:', error);
-            };
-        }
-        fetchJobs();
-    }, []);
+    // Handle Loading State
+    if (isLoading) {
+        return (
+            <SafeAreaView className="flex-1 flex justify-center items-center bg-white">
+                <ActivityIndicator size="large" color="#007bff" />
+                <Text className="text-gray-600 mt-4">Fetching jobs...</Text>
+            </SafeAreaView>
+        );
+    }
 
+    // Handle Error State
+    if (isError) {
+        return (
+            <SafeAreaView className="flex-1 flex justify-center items-center bg-white">
+                <Text className="text-red-500 text-lg">Failed to load jobs. Please try again later.</Text>
+            </SafeAreaView>
+        );
+    }
 
     return (
         <SafeAreaView className="flex-1 bg-white px-4">
@@ -43,7 +47,7 @@ export default function Index() {
 
 
                 {/* Hero Section  */}
-                <View className='mt-6 p-6 bg-blue-300 rounded-xl shadow-md'>
+                <View className='mt-6 p-6 bg-blue-300 rounded-xl shadow-sm'>
                     <Text className="text-xl font-bold text-blue-900">Find Your Next Remote Job!</Text>
                     <Text className="text-gray-700 mt-2">Browse thousands of remote jobs across various fields.</Text>
                 </View>
@@ -68,7 +72,7 @@ export default function Index() {
                             const jobKey = job.id ? job.id.toString() : `job-${index}`;
 
                             return (
-                                <View key={jobKey} className="bg-white shadow-md drop-shadow-lg rounded-xl mx-2 w-52 h-52 flex items-center justify-center">
+                                <View key={jobKey} className="bg-white shadow-sm drop-shadow-lg rounded-xl mx-2 w-52 h-52 flex items-center justify-center">
                                     {
                                         job.company_logo ? (
                                             <Image
@@ -87,19 +91,19 @@ export default function Index() {
                 </View>
 
                 {/* Highest Paying  */}
-                <View className="bg-gray-100 p-4 rounded-xl shadow-md mt-6">
+                <View className="bg-gray-50 p-4 rounded-xl shadow-sm mt-6">
                     <Text className="text-lg font-semibold my-4">💰 Top Paying Jobs</Text>
                     {jobs.filter((job) => job.salary_max).sort((a, b) => b.salary_max! - a.salary_max!).slice(0, 3)
                         .map((job) => (
                             <TouchableOpacity
                                 key={job.id}
-                                className="bg-white shadow-md rounded-xl p-4 mb-3"
+                                className="bg-white shadow-sm rounded-xl p-4 mb-3"
                                 onPress={() => router.push(`/job/${job.id}`)}>
                                 <View className="flex-row items-center">
                                     {job.company_logo && (
                                         <Image
                                             source={{ uri: job.company_logo }}
-                                            className="w-12 h-12 rounded-lg mr-3"
+                                            className="w-12 h-12 rounded-sm mr-3"
                                             resizeMode="contain"
                                         />
                                     )}
