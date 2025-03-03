@@ -32,8 +32,6 @@ using npm
 npm run android
 ```
 
-# OR
-
 using Yarn
 
 ```bash
@@ -46,8 +44,6 @@ yarn android
 ```bash
 npm run ios
 ```
-
-# OR
 
 using Yarn
 
