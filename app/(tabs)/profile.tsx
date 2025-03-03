@@ -7,7 +7,7 @@ import { deleteToken } from '@/utils/secureStore';
 import { useLogoutMutation } from '@/api/authAPI';
 import { logoutSuccess } from '@/config/authSlice';
 import { UserData } from '@/Interfaces/interface';
-import { View, Text, ActivityIndicator, TouchableOpacity } from 'react-native'
+import { View, Text, ScrollView, ActivityIndicator, TouchableOpacity, Image } from 'react-native'
 
 export default function Profile() {
 
@@ -16,7 +16,6 @@ export default function Profile() {
     const [logoutMutation, { isLoading }] = useLogoutMutation();
 
     const userInfo = useSelector(user) as UserData;
-    console.log("Details:", userInfo?.name);
 
     // Handle Logout Logic
     async function handleLogout() {
@@ -41,19 +40,52 @@ export default function Profile() {
     }
 
     return (
-        <View>
-            <Text className='text-3xl'>Welcome {userInfo?.name}</Text>
+        <View className="flex-1">
+            {/* Blue Background (Fixed at the top) */}
+            <View className="absolute top-0 left-0 right-0 h-3/4 bg-blue-600" />
 
-            <TouchableOpacity
-                className="bg-blue-600 p-4 rounded-lg px-4"
-                onPress={handleLogout}>
+            <ScrollView showsVerticalScrollIndicator={false} className="bg-transparent">
+                {/* Hero Section */}
+                <View className="p-10 flex-row items-center mt-12">
+                    {/* Profile Image */}
+                    <Image
+                        source={{ uri: 'https://www.gravatar.com/avatar/?d=mp' }}
+                        className="w-28 h-28 rounded-full border-2 border-white"
+                        resizeMode="cover"
+                    />
 
-                {isLoading ? (
-                    <ActivityIndicator size='small' color='white' />
-                ) : (
-                    <Text className="text-white text-center font-bold">Logout</Text>
-                )}
-            </TouchableOpacity>
+                    {/* User Details */}
+                    <View className="ml-4">
+                        <Text className="text-2xl font-semibold text-white">{userInfo?.name || "User"}</Text>
+                        <Text className="text-white opacity-90 text-lg">{userInfo?.email}</Text>
+                    </View>
+                </View>
+
+                {/* White Background Section */}
+                <View className="bg-white rounded-t-2xl -mt-6 min-h-screen p-6">
+                    <Text className="text-xl font-bold">Profile Information</Text>
+                    <Text className="text-gray-700 mt-2">More details about the user...</Text>
+
+                    <Text className="mt-4 text-3xl">
+                        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Molestiae nobis possimus, ipsa fugit magni quia nulla accusantium cum impedit et totam velit autem obcaecati illum earum delectus nihil dolore cumque?
+                    </Text>
+
+                    <Text className="mt-4 text-3xl">
+                        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Molestiae nobis possimus, ipsa fugit magni quia nulla accusantium cum impedit et totam velit autem obcaecati illum earum delectus nihil dolore cumque?
+                    </Text>
+
+                    {/* Logout Button */}
+                    <TouchableOpacity
+                        className="bg-blue-500 p-4 rounded-lg mt-6" onPress={handleLogout}>
+                        {isLoading ? (
+                            <ActivityIndicator size="small" color="white" />
+                        ) : (
+                            <Text className="text-white text-center font-bold">Logout</Text>
+                        )}
+                    </TouchableOpacity>
+
+                </View>
+            </ScrollView>
         </View>
-    )
+    );
 }
