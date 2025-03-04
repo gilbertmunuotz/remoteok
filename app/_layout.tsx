@@ -10,12 +10,8 @@ import { persistor, store } from "@/library/store";
 import { PersistGate } from "redux-persist/integration/react";
 import { useColorScheme, View, ActivityIndicator } from "react-native";
 
-// ✅ Move LogBox.ignoreLogs outside the component function
-LogBox.ignoreLogs([
-  'Warning: TRenderEngineProvider: Support for defaultProps will be removed from function components in a future major release. Use JavaScript default parameters instead.',
-  'Warning: MemoizedTNodeRenderer: Support for defaultProps will be removed from memo components in a future major release. Use JavaScript default parameters instead.',
-  'Warning: TNodeChildrenRenderer: Support for defaultProps will be removed from function components in a future major release. Use JavaScript default parameters instead.',
-]);
+// Temporary Solution
+LogBox.ignoreAllLogs(true);
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
