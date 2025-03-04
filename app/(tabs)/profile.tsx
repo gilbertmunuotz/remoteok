@@ -3,10 +3,15 @@ import { useSelector } from 'react-redux';
 import { user } from '@/config/authSlice';
 import { useDispatch } from 'react-redux';
 import Toast from 'react-native-toast-message';
+import Entypo from '@expo/vector-icons/Entypo';
 import { deleteToken } from '@/utils/secureStore';
 import { useLogoutMutation } from '@/api/authAPI';
+import Feather from '@expo/vector-icons/Feather';
 import { logoutSuccess } from '@/config/authSlice';
 import { UserData } from '@/Interfaces/interface';
+import AntDesign from '@expo/vector-icons/AntDesign';
+import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { View, Text, ScrollView, ActivityIndicator, TouchableOpacity, Image } from 'react-native'
 
 export default function Profile() {
@@ -39,12 +44,20 @@ export default function Profile() {
         }
     }
 
+    const profileOptions = [
+        { id: "1", title: "My Account", icon: <AntDesign size={24} name="user" color="black" /> },
+        { id: "2", title: "Face ID", icon: <Entypo size={24} name="lock" color="black" /> },
+        { id: "3", title: "Two-Factor Authentication", icon: <FontAwesome5 size={24} name="bell" color="black" /> },
+        { id: "4", title: "Help & Support", icon: <MaterialIcons size={24} name="support-agent" color="black" /> },
+        { id: "5", title: "About App", icon: <Feather size={24} name="info" color="#black" /> },
+    ];
+
     return (
         <View className="flex-1">
             {/* Blue Background (Fixed at the top) */}
             <View className="absolute top-0 left-0 right-0 h-3/4 bg-blue-600" />
 
-            <ScrollView showsVerticalScrollIndicator={false} className="bg-transparent">
+            <ScrollView showsVerticalScrollIndicator={false} className="bg-transparent flex-1">
                 {/* Hero Section */}
                 <View className="p-10 flex-row items-center mt-12">
                     {/* Profile Image */}
@@ -62,27 +75,31 @@ export default function Profile() {
                 </View>
 
                 {/* White Background Section */}
-                <View className="bg-white rounded-t-2xl -mt-6 min-h-screen p-6">
-                    <Text className="text-xl font-bold">Profile Information</Text>
+                <View className="bg-white rounded-t-2xl -mt-6 min-h-screen px-4">
+                    <Text className="text-xl font-bold mt-3">Profile Information</Text>
                     <Text className="text-gray-700 mt-2">More details about the user...</Text>
 
-                    <Text className="mt-4 text-3xl">
-                        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Molestiae nobis possimus, ipsa fugit magni quia nulla accusantium cum impedit et totam velit autem obcaecati illum earum delectus nihil dolore cumque?
-                    </Text>
-
-                    <Text className="mt-4 text-3xl">
-                        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Molestiae nobis possimus, ipsa fugit magni quia nulla accusantium cum impedit et totam velit autem obcaecati illum earum delectus nihil dolore cumque?
-                    </Text>
+                    {/* Profile Options List */}
+                    <View className="mt-4">
+                        {profileOptions.map((item) => (
+                            <TouchableOpacity key={item.id} className="flex-row items-center py-6 border-b border-gray-200">
+                                <View className="mr-3">{item.icon}</View>
+                                <Text className="text-lg text-gray-700">{item.title}</Text>
+                            </TouchableOpacity>
+                        ))}
+                    </View>
 
                     {/* Logout Button */}
-                    <TouchableOpacity
-                        className="bg-blue-500 p-4 rounded-lg mt-6" onPress={handleLogout}>
-                        {isLoading ? (
-                            <ActivityIndicator size="small" color="white" />
-                        ) : (
-                            <Text className="text-white text-center font-bold">Logout</Text>
-                        )}
-                    </TouchableOpacity>
+                    <View className="mt-12">
+                        <TouchableOpacity
+                            className="bg-blue-500 py-4 rounded-lg" onPress={handleLogout}>
+                            {isLoading ? (
+                                <ActivityIndicator size="small" color="white" />
+                            ) : (
+                                <Text className="text-white text-center font-bold">Logout</Text>
+                            )}
+                        </TouchableOpacity>
+                    </View>
 
                 </View>
             </ScrollView>

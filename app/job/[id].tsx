@@ -84,6 +84,7 @@ export default function JobDetails() {
                                 p: { paddingLeft: 5 },
                                 ul: { paddingLeft: 5 },
                             }}
+                            renderersProps={{}}
                         />
                     </View>
 
