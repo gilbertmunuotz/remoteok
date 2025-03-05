@@ -15,9 +15,9 @@ export default function OnBOarding() {
                 />
             </View>
 
-
-            <Text className="text-3xl text-blue-800">Discover Your Dream Job Here.</Text>
-            <Text className="text-lg text-black mx-6 mt-1 text-center">
+            <Text className="text-5xl text-blue-600 mb-10">remoteok 🚀</Text>
+            <Text className="text-3xl">Discover Your Dream Job Here.</Text>
+            <Text className="text-lg mx-6 mt-1 text-center">
                 Explore all the Existing jobs based on Your Interest and Study Major.
             </Text>
 
