@@ -2,16 +2,18 @@ import { useRouter } from 'expo-router';
 import { useSelector } from 'react-redux';
 import { user } from '@/config/authSlice';
 import { useDispatch } from 'react-redux';
+import { Switch } from "react-native-switch";
 import Toast from 'react-native-toast-message';
-import Entypo from '@expo/vector-icons/Entypo';
-import { deleteToken } from '@/utils/secureStore';
-import { useLogoutMutation } from '@/api/authAPI';
 import Feather from '@expo/vector-icons/Feather';
-import { logoutSuccess } from '@/config/authSlice';
+import { deleteToken } from '@/utils/secureStore';
+import { FontAwesome5 } from "@expo/vector-icons";
 import { UserData } from '@/Interfaces/interface';
+import { useLogoutMutation } from '@/api/authAPI';
+import { logoutSuccess } from '@/config/authSlice';
 import AntDesign from '@expo/vector-icons/AntDesign';
-import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import { changeTheme, selectTheme } from "@/config/themeSlice";
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { View, Text, ScrollView, ActivityIndicator, TouchableOpacity, Image } from 'react-native'
 
 export default function Profile() {
@@ -21,6 +23,11 @@ export default function Profile() {
     const [logoutMutation, { isLoading }] = useLogoutMutation();
 
     const userInfo = useSelector(user) as UserData;
+
+    // Extract Theme from Redux store
+    const theme = useSelector(selectTheme);
+
+    const isDarkMode = theme === "dark";
 
     // Handle Logout Logic
     async function handleLogout() {
@@ -45,17 +52,17 @@ export default function Profile() {
     }
 
     const profileOptions = [
-        { id: "1", title: "My Account", icon: <AntDesign size={24} name="user" color="black" /> },
-        { id: "2", title: "Face ID", icon: <Entypo size={24} name="lock" color="black" /> },
-        { id: "3", title: "Two-Factor Authentication", icon: <FontAwesome5 size={24} name="bell" color="black" /> },
-        { id: "4", title: "Help & Support", icon: <MaterialIcons size={24} name="support-agent" color="black" /> },
-        { id: "5", title: "About App", icon: <Feather size={24} name="info" color="#black" /> },
+        { id: "1", title: "My Account", icon: <AntDesign size={24} name="user" color={theme === "dark" ? "white" : "black"} /> },
+        { id: "2", title: "Face ID", icon: <MaterialCommunityIcons size={24} name="face-recognition" color={theme === "dark" ? "white" : "black"} /> },
+        { id: "3", title: "Two-Factor Authentication", icon: <MaterialCommunityIcons size={24} name="two-factor-authentication" color={theme === "dark" ? "white" : "black"} /> },
+        { id: "4", title: "Help & Support", icon: <MaterialIcons size={24} name="support-agent" color={theme === "dark" ? "white" : "black"} /> },
+        { id: "5", title: "About App", icon: <Feather size={24} name="info" color={theme === "dark" ? "white" : "black"} /> },
     ];
 
     return (
         <View className="flex-1">
-            {/* Blue Background (Fixed at the top) */}
-            <View className="absolute top-0 left-0 right-0 h-3/4 bg-blue-600" />
+            {/* Background Theme */}
+            <View className={`${theme === "dark" ? "bg-gray-900 h-full" : "bg-blue-600"} absolute top-0 left-0 right-0 h-3/4`} />
 
             <ScrollView showsVerticalScrollIndicator={false} className="bg-transparent flex-1">
                 {/* Hero Section */}
@@ -69,22 +76,47 @@ export default function Profile() {
 
                     {/* User Details */}
                     <View className="ml-4">
-                        <Text className="text-2xl font-semibold text-white">{userInfo?.name || "User"}</Text>
-                        <Text className="text-white opacity-90 text-lg">{userInfo?.email}</Text>
+                        <Text className={`${theme === "dark" ? "text-white" : "text-gray-900"} text-2xl font-semibold`}>
+                            {userInfo?.name || "User"}
+                        </Text>
+                        <Text className={`${theme === "dark" ? "text-gray-400" : "text-gray-700"} opacity-90 text-lg`}>
+                            {userInfo?.email}
+                        </Text>
+                    </View>
+
+                    {/* Toggle Theme Button */}
+                    <View className="ml-auto">
+                        <Switch
+                            value={isDarkMode}
+                            onValueChange={() => dispatch(changeTheme())}
+                            circleSize={30}
+                            barHeight={30}
+                            backgroundActive="#222"
+                            backgroundInactive="#ccc"
+                            circleActiveColor="#facc15"
+                            circleInActiveColor="#374151"
+                            renderInsideCircle={() => (
+                                <FontAwesome5
+                                    name={isDarkMode ? "moon" : "sun"}
+                                    size={16}
+                                    color={isDarkMode ? "white" : "yellow"}
+                                />
+                            )}
+                        />
                     </View>
                 </View>
 
                 {/* White Background Section */}
-                <View className="bg-white rounded-t-2xl -mt-6 min-h-screen px-4">
-                    <Text className="text-xl font-bold mt-3">Profile Information</Text>
-                    <Text className="text-gray-700 mt-2">More details about the user...</Text>
+                <View className={`${theme === "dark" ? "bg-gray-900" : "bg-white"} rounded-t-2xl -mt-6 min-h-screen px-4`}>
+                    <Text className={`${theme === "dark" ? "text-white" : "text-gray-900"} text-xl font-bold mt-3`}>Profile Information</Text>
+                    <Text className={`${theme === "dark" ? "text-gray-400" : "text-gray-700"} mt-2`}>More details about the user...</Text>
 
                     {/* Profile Options List */}
                     <View className="mt-4">
                         {profileOptions.map((item) => (
                             <TouchableOpacity key={item.id} className="flex-row items-center py-6 border-b border-gray-200">
                                 <View className="mr-3">{item.icon}</View>
-                                <Text className="text-lg text-gray-700">{item.title}</Text>
+                                <Text className={`${theme === "dark" ? "text-white" : "text-gray-700"} text-lg`}>{item.title}</Text>
                             </TouchableOpacity>
                         ))}
                     </View>
@@ -92,7 +124,8 @@ export default function Profile() {
                     {/* Logout Button */}
                     <View className="mt-12">
                         <TouchableOpacity
-                            className="bg-blue-500 py-4 rounded-lg" onPress={handleLogout}>
+                            className={`${theme === "dark" ? "bg-blue-600" : "bg-blue-500"} py-4 rounded-lg`}
+                            onPress={handleLogout}>
                             {isLoading ? (
                                 <ActivityIndicator size="small" color="white" />
                             ) : (
@@ -100,8 +133,8 @@ export default function Profile() {
                             )}
                         </TouchableOpacity>
                     </View>
-
                 </View>
+
             </ScrollView>
         </View>
     );

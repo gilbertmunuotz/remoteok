@@ -15,14 +15,19 @@
         "dark": "./assets/images/ios-dark.png",
         "light": "./assets/images/ios-light.png",
         "tinted": "./assets/images/ios-tinted.png"
+      },
+      "bundleIdentifier": "com.gilbertmunuotz.remoteok",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
       }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
-        "monoChromeImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "userInterfaceStyle": "automatic",
+      "package": "com.gilbertmunuotz.remoteok"
     },
     "plugins": [
       "expo-router",
@@ -43,6 +48,15 @@
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "642e1763-69c9-4351-a730-81f8e9691f35"
+      }
+    },
+    "owner": "gilbertmunuotz"
   }
 }

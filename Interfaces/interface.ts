@@ -32,4 +32,8 @@ interface ApiResponse {
     [key: string]: Job; // All keys in API response are job objects
 }
 
-export type { UserData, LoginResponse , Job, ApiResponse};
+interface ThemeType {
+    theme: "light" | "dark"
+}
+
+export type { UserData, LoginResponse, Job, ApiResponse, ThemeType };

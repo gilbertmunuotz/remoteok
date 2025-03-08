@@ -1,6 +1,7 @@
 import { jobsAPI } from '@/api/jobAPI';
 import { authAPI } from '@/api/authAPI';
 import authSlice from "../config/authSlice";
+import themeSlice from "../config/themeSlice";
 import { persistReducer, persistStore } from "redux-persist";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
@@ -12,9 +13,16 @@ const authPersistConfig = {
     storage: AsyncStorage, // Use AsyncStorage for persistence
 }
 
+// Persist configurations for theme slice
+const themePersistConfig = {
+    key: 'theme',
+    storage: AsyncStorage
+}
+
 // Combine reducers into a single reducer object.
 const rootReducer = combineReducers({
-    authState: persistReducer(authPersistConfig, authSlice), // Only persist the auth slice
+    authState: persistReducer(authPersistConfig, authSlice), // Persist auth slice
+    themeState: persistReducer(themePersistConfig, themeSlice), // Persist theme slice
     [authAPI.reducerPath]: authAPI.reducer, // Add authSlice reducer to the rootReducer
     [jobsAPI.reducerPath]: jobsAPI.reducer, // Add jobsAPI reducer to the rootReducer
 });

@@ -1,6 +1,8 @@
 import { useEffect } from 'react';
 import { decode } from "html-entities";
+import { useSelector } from "react-redux";
 import { useGetJobsQuery } from '@/api/jobAPI';
+import { selectTheme } from "@/config/themeSlice";
 import RenderHtml from "react-native-render-html";
 import { useLocalSearchParams, useNavigation } from 'expo-router';
 import { View, Text, Linking, SafeAreaView, useWindowDimensions, ActivityIndicator, ScrollView, Image, TouchableOpacity } from 'react-native';
@@ -17,20 +19,27 @@ export default function JobDetails() {
 
     const { width } = useWindowDimensions(); // Get device width
 
+    // Extract Theme from Redux store
+    const theme = useSelector(selectTheme);
+
     useEffect(() => {
         // Set a custom header title dynamically
         navigation.setOptions({
-            headerTitle: 'Job Details', // ✅ Change this to anything you want
-            headerBackTitle: 'Back', // ✅ Ensures back button says "Back"
+            headerTitle: 'Job Details',
+            headerBackTitle: 'Back',
+            headerStyle: {
+                backgroundColor: theme === "dark" ? "#171827" : "#ffffff",
+            },
+            headerTintColor: theme == "dark" ? "#fff" : "#000"
         });
     }, [navigation]);
 
     // Handle Loading State
     if (isLoading) {
         return (
-            <SafeAreaView className="flex-1 flex justify-center items-center bg-white">
+            <SafeAreaView className={`${theme === "dark" ? "bg-gray-900" : "bg-white"} flex-1 justify-center items-center`}>
                 <ActivityIndicator size="large" color="#007bff" />
-                <Text className="text-gray-600 mt-4">Fetching job...</Text>
+                <Text className={`${theme === "dark" ? "text-gray-400" : "text-gray-600"} mt-4`}>Fetching job...</Text>
             </SafeAreaView>
         );
     }
@@ -38,14 +47,14 @@ export default function JobDetails() {
     // Handle Error State
     if (isError || !job) {
         return (
-            <SafeAreaView className="flex-1 flex justify-center items-center bg-white">
+            <SafeAreaView className={`${theme === "dark" ? "bg-gray-900" : "bg-white"} flex-1 justify-center items-center`}>
                 <Text className="text-red-500 text-lg">Job Not Found. Please try again later.</Text>
             </SafeAreaView>
         );
     }
 
     return (
-        <SafeAreaView className="flex-1 bg-white">
+        <SafeAreaView className={`${theme === "dark" ? "bg-gray-900" : "bg-white"} flex-1`}>
             <ScrollView showsVerticalScrollIndicator={false}>
 
                 {/* Company Logo */}
@@ -57,34 +66,36 @@ export default function JobDetails() {
                             className='rounded-xl'
                             resizeMode="contain" />
                     ) : (
-                        <Text className="text-gray-500">No Logo Available</Text>
+                        <Text className={`${theme === "dark" ? "text-white" : "text-gray-900"} font-bold text-2xl`}>No Logo Available</Text>
                     )}
                 </View>
 
                 {/* Job Info */}
-                <View className='px-4'>
-                    <Text className="text-2xl font-bold">{job?.position}</Text>
-                    <Text className="text-lg text-gray-600">{job?.company}</Text>
-                    <Text className="text-gray-500 font-bold mb-2">{job?.location || 'Remote'}</Text>
-
+                <View className="px-4">
+                    <Text className={`${theme === "dark" ? "text-white" : "text-gray-900"} font-bold text-2xl`}>{job?.position}</Text>
+                    <Text className={`${theme === "dark" ? "text-white" : "text-gray-900"} text-lg`}>{job?.company}</Text>
+                    <Text className={`${theme === "dark" ? "text-white" : "text-gray-900"} font-bold mb-2`}>{job?.location || 'Remote'}</Text>
 
                     {/* Salary */}
                     {job?.salary_min && job.salary_max && (
-                        <Text className="text-green-600 font-bold mt-2">
+                        <Text className={`${theme === "dark" ? "text-white" : "text-gray-900"} font-bold mt-2`}>
                             💲 {job.salary_min.toLocaleString()} - {job.salary_max.toLocaleString()}
                         </Text>
                     )}
 
                     {/* Job Description */}
-                    <View className='mt-4'>
+                    <View className={`mt-4 ${theme === "dark" ? "bg-gray-900" : "bg-white"}`}>
                         <RenderHtml
                             contentWidth={width - 32}
-                            source={{ html: decode(job?.description! || '') }}
+                            source={{ html: decode(job?.description || '') }}
                             tagsStyles={{
-                                p: { paddingLeft: 5 },
-                                ul: { paddingLeft: 5 },
+                                p: { paddingLeft: 5, color: theme === "dark" ? "white" : "black" },
+                                ul: { paddingLeft: 5, color: theme === "dark" ? "white" : "black" },
+                                h1: { color: theme === "dark" ? "white" : "black" },
+                                li: { color: theme === "dark" ? "white" : "black" },
+                                span: { color: theme === "dark" ? "white" : "black" },
+                                a: { color: theme === "dark" ? '#4c9ee1' : '#007bff' },
                             }}
-                            renderersProps={{}}
                         />
                     </View>
 
