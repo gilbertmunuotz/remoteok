@@ -35,7 +35,7 @@ export default function Jobs() {
     }
 
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: theme === "dark" ? "#000" : "#fff" }}>
+        <SafeAreaView className={`flex-1 ${theme === "dark" ? "bg-black" : "bg-white"}`}>
             <FlatList
                 data={jobs}
                 keyExtractor={(item, index) => (item.id ? String(item.id) : `job-${index}`)}
