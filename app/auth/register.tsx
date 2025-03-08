@@ -1,14 +1,20 @@
-import { useRouter } from 'expo-router'
+import { useRouter } from 'expo-router';
+import { useSelector } from "react-redux";
+import { selectTheme } from "@/config/themeSlice";
 import { View, Text, KeyboardAvoidingView, Platform, Image, TextInput, TouchableOpacity } from 'react-native'
 
 export default function register() {
 
+    // Get the router Instance
     const router = useRouter();
+
+    // Extract Theme from Redux store
+    const theme = useSelector(selectTheme);
 
     return (
         <KeyboardAvoidingView
             behavior={Platform.OS === "ios" ? "padding" : "height"}
-            className='flex-1 justify-center p-6'>
+            className={`flex-1 justify-center p-6 ${theme === "dark" ? "bg-gray-900" : "bg-white"}`}>
 
             <View className='items-center mb-8'>
                 <Image
@@ -20,8 +26,8 @@ export default function register() {
 
             {/* Welcome Text */}
             <View className="items-center mb-8">
-                <Text className="text-black font-bold text-4xl mt-6">Create An Account.</Text>
-                <Text className="text-center text-lg text-gray-600 mt-1">
+                <Text className={`font-bold text-4xl mt-6 ${theme === "dark" ? "text-white" : "text-black"}`}>Create An Account.</Text>
+                <Text className={`text-center text-lg mt-1 ${theme === "dark" ? "text-white" : "text-black"}`}>
                     Create an Account so You can Explore all the Existing Jobs!
                 </Text>
             </View>
@@ -32,7 +38,16 @@ export default function register() {
                 {/* Name Input */}
                 <TextInput
                     placeholder="Name"
-                    className="border-b-2 border-gray-400 p-3 w-[85%] mx-auto text-lg"
+                    placeholderTextColor={theme === "dark" ? "#bbb" : "#666"}
+                    style={{
+                        borderBottomWidth: 2,
+                        borderColor: theme === "dark" ? "#bbb" : "#666",
+                        padding: 12,
+                        width: "85%",
+                        alignSelf: "center",
+                        fontSize: 18,
+                        color: theme === "dark" ? "#fff" : "#000",
+                    }}
                     keyboardType="default"
                     autoCapitalize="none"
                 />
@@ -40,7 +55,16 @@ export default function register() {
                 {/* Email Input */}
                 <TextInput
                     placeholder="Email"
-                    className="border-b-2 border-gray-400 p-3 w-[85%] mx-auto text-lg"
+                    placeholderTextColor={theme === "dark" ? "#bbb" : "#666"}
+                    style={{
+                        borderBottomWidth: 2,
+                        borderColor: theme === "dark" ? "#bbb" : "#666",
+                        padding: 12,
+                        width: "85%",
+                        alignSelf: "center",
+                        fontSize: 18,
+                        color: theme === "dark" ? "#fff" : "#000",
+                    }}
                     keyboardType="email-address"
                     autoCapitalize="none"
                 />
@@ -49,7 +73,16 @@ export default function register() {
                 <TextInput
                     secureTextEntry
                     placeholder="Password"
-                    className="border-b-2 border-gray-400 p-3 w-[85%] mx-auto text-lg"
+                    placeholderTextColor={theme === "dark" ? "#bbb" : "#666"}
+                    style={{
+                        borderBottomWidth: 2,
+                        borderColor: theme === "dark" ? "#bbb" : "#666",
+                        padding: 12,
+                        width: "85%",
+                        alignSelf: "center",
+                        fontSize: 18,
+                        color: theme === "dark" ? "#fff" : "#000",
+                    }}
                 />
             </View>
 
@@ -61,7 +94,7 @@ export default function register() {
             </View>
             <View>
                 <TouchableOpacity onPress={() => router.push("/auth/login")} >
-                    <Text className='text-center mt-4 text-black'>Alreay have an Account?</Text>
+                    <Text className={`text-center mt-4 ${theme === "dark" ? "text-white" : "text-black"}`}>Alreay have an Account?</Text>
                 </TouchableOpacity>
             </View>
         </KeyboardAvoidingView >

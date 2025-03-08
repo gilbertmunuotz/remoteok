@@ -1,12 +1,17 @@
-import { View, Text, Image, TouchableOpacity } from "react-native";
 import { useRouter } from "expo-router";
+import { useSelector } from "react-redux";
+import { selectTheme } from "@/config/themeSlice";
+import { View, Text, Image, TouchableOpacity } from "react-native";
 
 export default function OnBOarding() {
 
     const router = useRouter();
 
+    // Extract Theme from Redux store
+    const theme = useSelector(selectTheme);
+
     return (
-        <View className="flex-1 justify-center items-center p-4">
+        <View className={`flex-1 justify-center items-center p-4 ${theme === "dark" ? "bg-gray-900" : "bg-white"}`}>
             <View>
                 <Image
                     className="h-1/2"
@@ -16,8 +21,8 @@ export default function OnBOarding() {
             </View>
 
             <Text className="text-5xl text-blue-600 mb-10">remoteok 🚀</Text>
-            <Text className="text-3xl">Discover Your Dream Job Here.</Text>
-            <Text className="text-lg mx-6 mt-1 text-center">
+            <Text className={`text-3xl ${theme === "dark" ? "text-white" : "text-gray-700"}`}>Discover Your Dream Job Here.</Text>
+            <Text className={`text-lg mx-6 mt-1 text-center ${theme === "dark" ? "text-white" : "text-gray-700"}`}>
                 Explore all the Existing jobs based on Your Interest and Study Major.
             </Text>
 

@@ -1,7 +1,10 @@
-import BottomTabNav from "@/components/BottomTabNav"
-import { useSelector } from "react-redux";
+import { useEffect } from "react";
+import { Appearance } from "react-native";
 import { StatusBar } from "expo-status-bar";
+import { setTheme } from "@/config/themeSlice";
 import { selectTheme } from "@/config/themeSlice";
+import BottomTabNav from "@/components/BottomTabNav"
+import { useSelector, useDispatch } from "react-redux";
 
 export default function _layout() {
 
@@ -10,6 +13,22 @@ export default function _layout() {
 
     // Extract Theme from Redux store
     const theme = useSelector(selectTheme) as ThemeType;
+
+    // Get the dispatch Instance
+    const dispatch = useDispatch();
+
+    // Track Theme mode change
+    useEffect(() => {
+        // 🔥 Listen for system theme changes and update Redux state
+        const updateTheme = (preferences: Appearance.AppearancePreferences) => {
+            const newTheme = preferences.colorScheme;
+            dispatch(setTheme(newTheme));
+        };
+
+        const subscription = Appearance.addChangeListener(updateTheme);
+
+        return () => subscription.remove(); // Cleanup on unmount
+    }, [dispatch])
 
     return (
         <>

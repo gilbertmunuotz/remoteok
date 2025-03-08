@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { useRouter } from 'expo-router';
 import { useDispatch } from 'react-redux';
-import { saveToken } from '@/utils/secureStore';
+import { useSelector } from "react-redux";
 import Toast from 'react-native-toast-message';
+import { saveToken } from '@/utils/secureStore';
 import { useLoginMutation } from '@/api/authAPI';
+import { selectTheme } from "@/config/themeSlice";
 import { loginSuccess } from "@/config/authSlice";
 import { UserData } from "@/Interfaces/interface";
 import { View, Text, KeyboardAvoidingView, Platform, Image, TextInput, TouchableOpacity, ActivityIndicator } from 'react-native'
@@ -15,6 +17,9 @@ export default function login() {
 
     //Instance of useDispatch
     const dispatch = useDispatch();
+
+    // Extract Theme from Redux store
+    const theme = useSelector(selectTheme);
 
     // Initialize Form State
     const [email, setEmail] = useState('');
@@ -72,7 +77,7 @@ export default function login() {
     return (
         <KeyboardAvoidingView
             behavior={Platform.OS === "ios" ? "padding" : "height"}
-            className='flex-1 justify-center p-6'>
+            className={`flex-1 justify-center p-6 ${theme === "dark" ? "bg-gray-900" : "bg-white"}`}>
 
             <View className='items-center mb-8'>
                 <Image
@@ -84,8 +89,8 @@ export default function login() {
 
             {/* Welcome Text */}
             <View className="items-center mb-8">
-                <Text className="text-black font-bold text-4xl mt-6">Login Here.</Text>
-                <Text className="text-center text-lg text-gray-600 mt-1">
+                <Text className={`font-bold text-4xl mt-6 ${theme === "dark" ? "text-white" : "text-gray-700"}`}>Login Here.</Text>
+                <Text className={`text-center text-lg mt-1 ${theme === "dark" ? "text-white" : "text-gray-700"}`}>
                     Welcome Back! You've Been Missed!
                 </Text>
             </View>
@@ -96,7 +101,16 @@ export default function login() {
                 {/* Email Input */}
                 <TextInput
                     placeholder="Email"
-                    className="border-b-2 border-gray-400 p-3 w-[85%] mx-auto text-lg"
+                    placeholderTextColor={theme === "dark" ? "#bbb" : "#666"}
+                    style={{
+                        borderBottomWidth: 2,
+                        borderColor: theme === "dark" ? "#bbb" : "#666",
+                        padding: 12,
+                        width: "85%",
+                        alignSelf: "center",
+                        fontSize: 18,
+                        color: theme === "dark" ? "#fff" : "#000",
+                    }}
                     keyboardType="email-address"
                     autoCapitalize="none"
                     value={email}
@@ -107,7 +121,16 @@ export default function login() {
                 <TextInput
                     secureTextEntry
                     placeholder="Password"
-                    className="border-b-2 border-gray-400 p-3 w-[85%] mx-auto text-lg"
+                    placeholderTextColor={theme === "dark" ? "#bbb" : "#666"}
+                    style={{
+                        borderBottomWidth: 2,
+                        borderColor: theme === "dark" ? "#bbb" : "#666",
+                        padding: 12,
+                        width: "85%",
+                        alignSelf: "center",
+                        fontSize: 18,
+                        color: theme === "dark" ? "#fff" : "#000",
+                    }}
                     value={password}
                     onChangeText={setPassword}
                 />
@@ -121,7 +144,7 @@ export default function login() {
             </View>
             <View>
                 <TouchableOpacity onPress={() => router.push("/auth/register")}>
-                    <Text className='text-center mt-4 text-black'>Don't have an Account?</Text>
+                    <Text className={`text-center mt-4 ${theme === "dark" ? "text-white" : "text-gray-700"}`}>Don't have an Account?</Text>
                 </TouchableOpacity>
             </View>
         </KeyboardAvoidingView >

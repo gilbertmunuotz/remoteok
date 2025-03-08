@@ -79,7 +79,7 @@ export default function Profile() {
                         <Text className={`${theme === "dark" ? "text-white" : "text-gray-900"} text-2xl font-semibold`}>
                             {userInfo?.name || "User"}
                         </Text>
-                        <Text className={`${theme === "dark" ? "text-gray-400" : "text-gray-700"} opacity-90 text-lg`}>
+                        <Text className={`${theme === "dark" ? "text-white" : "text-gray-300"} opacity-90 text-lg`}>
                             {userInfo?.email}
                         </Text>
                     </View>
