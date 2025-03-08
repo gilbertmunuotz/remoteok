@@ -1,6 +1,7 @@
 // Import npm packages
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Entypo, Foundation } from '@expo/vector-icons';
+import { ThemeType } from "@/Interfaces/interface";
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 
 // Import all tab screens dynamically
@@ -11,8 +12,7 @@ import Profile from "@/app/(tabs)/profile";
 // Create instance of tab navigator(createBottomTabNavigator)
 const Tab = createBottomTabNavigator();
 
-
-export default function BottomTabNav() {
+export default function BottomTabNav({ theme }: ThemeType) {
     return (
         <Tab.Navigator
             screenOptions={({ route }) => ({
@@ -30,10 +30,13 @@ export default function BottomTabNav() {
                         return <Entypo name={'circle'} size={size} color={color} />;
                     }
                 },
-                tabBarActiveTintColor: '#5363df',
-                tabBarInactiveTintColor: 'gray',
+                tabBarActiveTintColor: theme === "dark" ? "#3B82F6" : "#5363df",
+                tabBarInactiveTintColor: theme === "dark" ? "#9ca3af" : "gray",
                 tabBarLabelStyle: { fontSize: 12, marginBottom: 5 },
-                tabBarStyle: { paddingTop: 5, }
+                tabBarStyle: {
+                    backgroundColor: theme === "dark" ? "#171827" : "ffffff",
+                    paddingTop: 5,
+                }
             })}
         >
             {/* Screen One */}

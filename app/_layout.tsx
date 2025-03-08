@@ -1,20 +1,18 @@
 import "../global.css";
 import { LogBox } from "react-native";
 import { Provider } from "react-redux";
-import { StatusBar } from "expo-status-bar";
 import { useState, useEffect } from "react";
 import { Stack, Redirect } from "expo-router";
 import Toast from "react-native-toast-message";
 import { getToken } from "../utils/secureStore";
 import { persistor, store } from "@/library/store";
+import { View, ActivityIndicator } from "react-native";
 import { PersistGate } from "redux-persist/integration/react";
-import { useColorScheme, View, ActivityIndicator } from "react-native";
 
 // Temporary Solution
 LogBox.ignoreAllLogs(true);
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
@@ -34,6 +32,7 @@ export default function RootLayout() {
     checkAuth();
   }, []);
 
+  // Handle Loading State
   if (isLoading) {
     return (
       <View className="flex-1 justify-center items-center">
@@ -45,8 +44,6 @@ export default function RootLayout() {
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
-        <StatusBar style={colorScheme === "dark" ? "light" : "dark"} />
-
 
         {/* Redirect users based on authentication */}
         {isAuthenticated ? <Redirect href="/(tabs)" /> : <Redirect href="/auth" />}
