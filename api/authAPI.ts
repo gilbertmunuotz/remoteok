@@ -14,6 +14,13 @@ export const authAPI = createApi({
     tagTypes: ['Auth'],
     baseQuery,
     endpoints: (builder) => ({
+        register: builder.mutation<void, UserData>({
+            query: (credentials) => ({
+                url: '/register',
+                method: 'POST',
+                body: credentials
+            })
+        }),
         login: builder.mutation<LoginResponse, UserData>({
             query: (credentials) => ({
                 url: '/login',
@@ -31,4 +38,4 @@ export const authAPI = createApi({
 })
 
 // Export hooks for components to use
-export const { useLoginMutation, useLogoutMutation } = authAPI;
+export const { useRegisterMutation, useLoginMutation, useLogoutMutation } = authAPI;

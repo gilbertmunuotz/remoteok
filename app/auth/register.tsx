@@ -1,7 +1,10 @@
+import { useState } from 'react';
 import { useRouter } from 'expo-router';
 import { useSelector } from "react-redux";
+import Toast from 'react-native-toast-message';
 import { selectTheme } from "@/config/themeSlice";
-import { View, Text, KeyboardAvoidingView, Platform, Image, TextInput, TouchableOpacity } from 'react-native'
+import { useRegisterMutation } from '@/api/authAPI';
+import { View, Text, KeyboardAvoidingView, Platform, Image, TextInput, TouchableOpacity, ActivityIndicator } from 'react-native'
 
 export default function register() {
 
@@ -10,6 +13,59 @@ export default function register() {
 
     // Extract Theme from Redux store
     const theme = useSelector(selectTheme);
+
+    // Initialize Form State
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+
+    // Destructure rtk hook
+    const [registerMutation, { isLoading }] = useRegisterMutation();
+
+    // Handle Form Submission
+    async function handleSubmit() {
+
+        const data = { name, email, password };
+
+        // Prevent API request if fields are empty
+        if (!name || !email || !password) {
+            Toast.show({
+                type: 'error',
+                text1: 'All fields are required!',
+                text1Style: { fontSize: 15 },
+                position: 'top'
+            });
+
+            return; // Stops function execution here!
+        }
+
+
+        try {
+            const user = await registerMutation(data).unwrap();
+            Toast.show({
+                type: 'success',
+                text1: 'Registered Successfully!',
+                text1Style: { fontSize: 15 },
+                text2: 'Login To Continue',
+                text2Style: { fontSize: 15 },
+                position: 'top',
+            }),
+                router.replace("/auth/login");
+
+        } catch (error: any) {
+            console.error("An error occured while logging in", error);
+
+            // Extract the API error message
+            const errorMessage = error?.data?.message || "Something went wrong. Please try again.";
+
+            // Show error toast with extracted message
+            Toast.show({
+                type: "error",
+                text1: errorMessage,
+                position: "top",
+            });
+        }
+    }
 
     return (
         <KeyboardAvoidingView
@@ -50,6 +106,8 @@ export default function register() {
                     }}
                     keyboardType="default"
                     autoCapitalize="none"
+                    value={name}
+                    onChangeText={setName}
                 />
 
                 {/* Email Input */}
@@ -67,6 +125,8 @@ export default function register() {
                     }}
                     keyboardType="email-address"
                     autoCapitalize="none"
+                    value={email}
+                    onChangeText={setEmail}
                 />
 
                 {/* Password Input */}
@@ -83,13 +143,15 @@ export default function register() {
                         fontSize: 18,
                         color: theme === "dark" ? "#fff" : "#000",
                     }}
+                    value={password}
+                    onChangeText={setPassword}
                 />
             </View>
 
 
             <View className='flex flex-row my-6'>
-                <TouchableOpacity className="flex-1 bg-blue-600 p-4 rounded-lg mx-4">
-                    <Text className="text-white text-center font-semibold">Sign Up</Text>
+                <TouchableOpacity className="flex-1 bg-blue-600 p-4 rounded-lg mx-4" onPress={handleSubmit}>
+                    {isLoading ? <ActivityIndicator color="white" /> : <Text className="text-white text-center font-semibold">Sign Up</Text>}
                 </TouchableOpacity>
             </View>
             <View>
