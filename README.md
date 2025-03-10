@@ -53,8 +53,12 @@ or using Yarn
 yarn ios
 ```
 
-# Images
-![App Screenshot] (./assets/images/ios.png) (./assets/images/android.png)
+# App ScreenShots
+
+<div align="center">
+  <img src="https://github.com/gilbertmunuotz/remoteok/blob/a7b4a0cc33aa21be08901a510f7aec672d8a38f6/assets/images/ios.png" alt="iOS Screenshot" width="45%" />
+  <img src="https://github.com/gilbertmunuotz/remoteok/blob/a7b4a0cc33aa21be08901a510f7aec672d8a38f6/assets/images/android.png" alt="Android Screenshot" width="45%" />
+</div>
 
 
 # Troubleshooting
