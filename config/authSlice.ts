@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../library/store";
-import { UserData } from "@/Interfaces/interface";
+import { UserData } from "@/interfaces/interface";
 
 const initialState = {
     isAuthenticated: false,

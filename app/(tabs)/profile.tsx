@@ -7,7 +7,7 @@ import Toast from 'react-native-toast-message';
 import Feather from '@expo/vector-icons/Feather';
 import { deleteToken } from '@/utils/secureStore';
 import { FontAwesome5 } from "@expo/vector-icons";
-import { UserData } from '@/Interfaces/interface';
+import { UserData } from '@/interfaces/interface';
 import { useLogoutMutation } from '@/api/authAPI';
 import { logoutSuccess } from '@/config/authSlice';
 import AntDesign from '@expo/vector-icons/AntDesign';
