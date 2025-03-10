@@ -1,6 +1,6 @@
 import { SERVER_URI } from "@/constants/constant";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { LoginResponse, UserData } from "../Interfaces/interface";
+import { LoginResponse, UserData } from "../interfaces/interface";
 
 // Define a service using a base URI and expected endpoints
 const baseQuery = fetchBaseQuery({

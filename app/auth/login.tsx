@@ -7,7 +7,7 @@ import { saveToken } from '@/utils/secureStore';
 import { useLoginMutation } from '@/api/authAPI';
 import { selectTheme } from "@/config/themeSlice";
 import { loginSuccess } from "@/config/authSlice";
-import { UserData } from "@/Interfaces/interface";
+import { UserData } from "@/interfaces/interface";
 import { View, Text, KeyboardAvoidingView, Platform, Image, TextInput, TouchableOpacity, ActivityIndicator } from 'react-native'
 
 export default function login() {
@@ -147,6 +147,7 @@ export default function login() {
                     <Text className={`text-center mt-4 ${theme === "dark" ? "text-white" : "text-gray-700"}`}>Don't have an Account?</Text>
                 </TouchableOpacity>
             </View>
+            <Text className={`text-center mt-3 ${theme === "dark" ? "text-white" : "text-black"}`}>By continuing you Agree to Our Terms and Privacy Policy</Text>
         </KeyboardAvoidingView >
     )
 }

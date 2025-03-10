@@ -1,7 +1,7 @@
 // Import npm packages
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Entypo, Foundation } from '@expo/vector-icons';
-import { ThemeType } from "@/Interfaces/interface";
+import { ThemeType } from "@/interfaces/interface";
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 
 // Import all tab screens dynamically

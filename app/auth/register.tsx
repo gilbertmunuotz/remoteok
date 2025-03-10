@@ -158,6 +158,7 @@ export default function register() {
                 <TouchableOpacity onPress={() => router.push("/auth/login")} >
                     <Text className={`text-center mt-4 ${theme === "dark" ? "text-white" : "text-black"}`}>Alreay have an Account?</Text>
                 </TouchableOpacity>
+                <Text className={`text-center mt-3 ${theme === "dark" ? "text-white" : "text-black"}`}>By continuing you Agree to Our Terms and Privacy Policy</Text>
             </View>
         </KeyboardAvoidingView >
     )
