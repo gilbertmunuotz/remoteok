@@ -53,6 +53,10 @@ or using Yarn
 yarn ios
 ```
 
+# Images
+![App Screenshot] (./assets/images/ios.png) (./assets/images/android.png)
+
+
 # Troubleshooting
 
 If you can't get this to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page. If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
