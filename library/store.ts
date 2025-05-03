@@ -27,7 +27,7 @@ const rootReducer = combineReducers({
     [jobsAPI.reducerPath]: jobsAPI.reducer, // Add jobsAPI reducer to the rootReducer
 });
 
-// Create and export the store
+
 export const store = configureStore({
     reducer: rootReducer,
     // Add the middleware for the API slices

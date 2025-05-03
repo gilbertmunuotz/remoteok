@@ -1,6 +1,6 @@
 import { JOBS_API } from '@/constants/constant';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { ApiResponse, Job } from '@/interfaces/interface';
+import { Job } from '@/interfaces/interface';
 
 
 // Create an API service for jobs
