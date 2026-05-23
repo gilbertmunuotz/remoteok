@@ -17,8 +17,12 @@ interface LoginResponse {
 
 interface Job {
     id: string;
+    slug?: string;
+    epoch?: number;
+    date?: string;
     company: string;
-    company_logo?: string; // Optional since some jobs may not have a logo
+    company_logo?: string;
+    logo?: string;
     position: string;
     tags: string[];
     location: string;
@@ -26,6 +30,7 @@ interface Job {
     salary_min?: number;
     salary_max?: number;
     apply_url: string;
+    url?: string;
 }
 
 interface ApiResponse {

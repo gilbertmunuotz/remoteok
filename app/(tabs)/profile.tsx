@@ -17,19 +17,14 @@ import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { View, Text, ScrollView, ActivityIndicator, TouchableOpacity, Image } from 'react-native'
 
 export default function Profile() {
-
     const dispatch = useDispatch();
     const router = useRouter();
     const [logoutMutation, { isLoading }] = useLogoutMutation();
 
     const userInfo = useSelector(user) as UserData;
-
-    // Extract Theme from Redux store
     const theme = useSelector(selectTheme);
-
     const isDarkMode = theme === "dark";
 
-    // Handle Logout Logic
     async function handleLogout() {
         try {
             await logoutMutation().unwrap();
