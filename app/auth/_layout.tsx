@@ -31,11 +31,7 @@ export default function _layout() {
     return (
         <>
             {/* Apply status bar theme after the store is available */}
-            <StatusBar
-                style={theme === "dark" ? "light" : "dark"}
-                backgroundColor="transparent"
-                translucent={true}
-            />
+            <StatusBar style={theme === "dark" ? "light" : "dark"} />
 
             <Stack>
                 {/* Onboarding Screen */}

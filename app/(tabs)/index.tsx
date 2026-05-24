@@ -19,10 +19,13 @@ export default function Index() {
     // Destructure rtk Hook
     const { data: jobs = [], isLoading, isError } = useGetJobsQuery();;
 
+    const isDark = theme === "dark";
+    const screenBackground = isDark ? "#171827" : "#ffffff";
+
     // Handle Loading State
     if (isLoading) {
         return (
-            <SafeAreaView className={`flex-1 flex justify-center items-center ${theme === "dark" ? "bg-gray-900" : "bg-white"}`}>
+            <SafeAreaView style={{ flex: 1, backgroundColor: screenBackground }} className="flex-1 flex justify-center items-center">
                 <ActivityIndicator size="large" color="#007bff" />
                 <Text className={`${theme === "dark" ? "text-gray-400" : "text-gray-600"} mt-4`}>Fetching jobs...</Text>
             </SafeAreaView>
@@ -32,15 +35,15 @@ export default function Index() {
     // Handle Error State
     if (isError) {
         return (
-            <SafeAreaView className={`flex-1 flex justify-center items-center ${theme === "dark" ? "bg-gray-900" : "bg-white"}`}>
+            <SafeAreaView style={{ flex: 1, backgroundColor: screenBackground }} className="flex-1 flex justify-center items-center">
                 <Text className="text-red-500 text-lg">Failed to load jobs. Please try again later.</Text>
             </SafeAreaView>
         );
     }
 
     return (
-        <SafeAreaView className={`flex-1 ${theme === "dark" ? "bg-gray-900" : "bg-white"} px-4`}>
-            <ScrollView showsVerticalScrollIndicator={false}>
+        <SafeAreaView style={{ flex: 1, backgroundColor: screenBackground }} className="flex-1 px-4">
+            <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 24 }}>
                 {/* Greetings */}
                 <View className="mt-5">
                     <Text className={`${theme === "dark" ? "text-white" : "text-gray-900"} text-4xl font-bold`}>
