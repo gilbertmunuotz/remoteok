@@ -1,45 +1,131 @@
-import { useEffect } from "react";
-import { Appearance } from "react-native";
+import { Appearance, Platform } from "react-native";
 import { StatusBar } from "expo-status-bar";
-import { setTheme } from "@/config/themeSlice";
-import { selectTheme } from "@/config/themeSlice";
-import BottomTabNav from "@/components/BottomTabNav"
+import * as SystemUI from "expo-system-ui";
+import { NativeTabs } from "expo-router/unstable-native-tabs";
+import { useEffect, useMemo } from "react";
+import {
+    DarkTheme,
+    DefaultTheme,
+    ThemeProvider,
+} from "expo-router/react-navigation";
+import { setTheme, selectTheme } from "@/config/themeSlice";
 import { useSelector, useDispatch } from "react-redux";
 
-export default function _layout() {
+type ThemeType = "light" | "dark";
 
-    // Define custom ThemeType
-    type ThemeType = "light" | "dark";
+const TAB_BACKGROUND = {
+    dark: "#171827",
+    light: "#ffffff",
+} as const;
 
-    // Extract Theme from Redux store
+export default function Layout() {
     const theme = useSelector(selectTheme) as ThemeType;
-
-    // Get the dispatch Instance
     const dispatch = useDispatch();
+    const isDark = theme === "dark";
+    const statusBarStyle = isDark ? "light" : "dark";
+    const backgroundColor = isDark ? TAB_BACKGROUND.dark : TAB_BACKGROUND.light;
+    const activeTint = isDark ? "#3B82F6" : "#5363df";
+    const inactiveTint = isDark ? "#9ca3af" : "#6b7280";
 
-    // Track Theme mode change
+    const navigationTheme = useMemo(
+        () =>
+            isDark
+                ? {
+                      ...DarkTheme,
+                      colors: {
+                          ...DarkTheme.colors,
+                          primary: activeTint,
+                          background: TAB_BACKGROUND.dark,
+                          card: TAB_BACKGROUND.dark,
+                          border: "#2d3148",
+                          text: "#ffffff",
+                      },
+                  }
+                : {
+                      ...DefaultTheme,
+                      colors: {
+                          ...DefaultTheme.colors,
+                          primary: activeTint,
+                          background: TAB_BACKGROUND.light,
+                          card: TAB_BACKGROUND.light,
+                          text: "#111827",
+                      },
+                  },
+        [isDark, activeTint]
+    );
+
     useEffect(() => {
-        // 🔥 Listen for system theme changes and update Redux state
+        SystemUI.setBackgroundColorAsync(backgroundColor);
+    }, [backgroundColor]);
+
+    useEffect(() => {
+        Appearance.setColorScheme(isDark ? "dark" : "light");
+    }, [isDark]);
+
+    useEffect(() => {
         const updateTheme = (preferences: Appearance.AppearancePreferences) => {
-            const newTheme = preferences.colorScheme;
-            dispatch(setTheme(newTheme));
+            dispatch(setTheme(preferences.colorScheme));
         };
 
         const subscription = Appearance.addChangeListener(updateTheme);
 
-        return () => subscription.remove(); // Cleanup on unmount
-    }, [dispatch])
+        return () => subscription.remove();
+    }, [dispatch]);
 
     return (
-        <>
-            {/* Apply status bar theme after the store is available */}
-            <StatusBar
-                style={theme === "dark" ? "light" : "dark"}
-                backgroundColor="transparent"
-                translucent={true}
-            />
-            {/*  Use the reusable tab navigation and Pass theme as prop */}
-            <BottomTabNav theme={theme} />
-        </>
+        <ThemeProvider value={navigationTheme}>
+            <StatusBar style={statusBarStyle} />
+
+            <NativeTabs
+                key={theme}
+                tintColor={activeTint}
+                iconColor={{ default: inactiveTint, selected: activeTint }}
+                labelStyle={{
+                    default: { color: inactiveTint, fontSize: 12 },
+                    selected: { color: activeTint, fontSize: 12 },
+                }}
+                backgroundColor={backgroundColor}
+                blurEffect={
+                    Platform.OS === "ios"
+                        ? isDark
+                            ? "systemChromeMaterialDark"
+                            : "systemChromeMaterialLight"
+                        : undefined
+                }
+            >
+                <NativeTabs.Trigger
+                    name="index"
+                    contentStyle={{ backgroundColor }}
+                >
+                    <NativeTabs.Trigger.Label>Home</NativeTabs.Trigger.Label>
+                    <NativeTabs.Trigger.Icon
+                        sf={{ default: "house", selected: "house.fill" }}
+                        md={{ default: "home", selected: "home" }}
+                    />
+                </NativeTabs.Trigger>
+
+                <NativeTabs.Trigger
+                    name="jobs"
+                    contentStyle={{ backgroundColor }}
+                >
+                    <NativeTabs.Trigger.Label>Jobs</NativeTabs.Trigger.Label>
+                    <NativeTabs.Trigger.Icon
+                        sf={{ default: "briefcase", selected: "briefcase.fill" }}
+                        md={{ default: "work", selected: "work" }}
+                    />
+                </NativeTabs.Trigger>
+
+                <NativeTabs.Trigger
+                    name="profile"
+                    contentStyle={{ backgroundColor }}
+                >
+                    <NativeTabs.Trigger.Label>Profile</NativeTabs.Trigger.Label>
+                    <NativeTabs.Trigger.Icon
+                        sf={{ default: "person.circle", selected: "person.circle.fill" }}
+                        md={{ default: "person", selected: "person" }}
+                    />
+                </NativeTabs.Trigger>
+            </NativeTabs>
+        </ThemeProvider>
     );
 }
