@@ -1,16 +1,18 @@
 import { useEffect } from "react";
-import { Stack } from "expo-router";
+import { Redirect, Stack } from "expo-router";
 import { Appearance } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { setTheme } from "@/config/themeSlice";
 import { selectTheme } from "@/config/themeSlice";
 import { useSelector, useDispatch } from "react-redux";
+import { isAuthenticated } from "@/config/authSlice";
 
 
 export default function _layout() {
 
     // Extract Theme from Redux Store
     const theme = useSelector(selectTheme);
+    const authenticated = useSelector(isAuthenticated);
 
     // Get the dispatch Instance
     const dispatch = useDispatch();
@@ -30,6 +32,7 @@ export default function _layout() {
 
     return (
         <>
+            {authenticated ? <Redirect href="/(tabs)" /> : null}
             {/* Apply status bar theme after the store is available */}
             <StatusBar style={theme === "dark" ? "light" : "dark"} />
 

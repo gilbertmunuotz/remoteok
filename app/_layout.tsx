@@ -2,7 +2,7 @@ import "../global.css";
 import { LogBox } from "react-native";
 import { Provider } from "react-redux";
 import { useState, useEffect } from "react";
-import { Stack, Redirect } from "expo-router";
+import { Stack } from "expo-router";
 import Toast from "react-native-toast-message";
 import { getToken } from "../utils/secureStore";
 import { persistor, store } from "@/library/store";
@@ -14,14 +14,12 @@ LogBox.ignoreAllLogs(true);
 
 export default function RootLayout() {
   const [isLoading, setIsLoading] = useState(true);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
     const checkAuth = async () => {
       setIsLoading(true);
       try {
-        const token = await getToken();
-        setIsAuthenticated(!!token); // ✅ Cleaner way to set state
+        await getToken();
       } catch (error) {
         console.error("Error checking auth", error);
       } finally {
@@ -44,9 +42,6 @@ export default function RootLayout() {
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
-
-        {/* Redirect users based on authentication */}
-        {isAuthenticated ? <Redirect href="/(tabs)" /> : <Redirect href="/auth" />}
 
         <Stack>
           <Stack.Screen name="auth" options={{ headerShown: false }} />

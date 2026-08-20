@@ -2,6 +2,7 @@ import { Appearance, Platform } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import * as SystemUI from "expo-system-ui";
 import { NativeTabs } from "expo-router/unstable-native-tabs";
+import { Redirect } from "expo-router";
 import { useEffect, useMemo } from "react";
 import {
     DarkTheme,
@@ -10,6 +11,7 @@ import {
 } from "expo-router/react-navigation";
 import { setTheme, selectTheme } from "@/config/themeSlice";
 import { useSelector, useDispatch } from "react-redux";
+import { isAuthenticated } from "@/config/authSlice";
 
 type ThemeType = "light" | "dark";
 
@@ -20,6 +22,7 @@ const TAB_BACKGROUND = {
 
 export default function Layout() {
     const theme = useSelector(selectTheme) as ThemeType;
+    const authenticated = useSelector(isAuthenticated);
     const dispatch = useDispatch();
     const isDark = theme === "dark";
     const statusBarStyle = isDark ? "light" : "dark";
@@ -73,11 +76,11 @@ export default function Layout() {
     }, [dispatch]);
 
     return (
+        authenticated ? (
         <ThemeProvider value={navigationTheme}>
             <StatusBar style={statusBarStyle} />
 
             <NativeTabs
-                key={theme}
                 tintColor={activeTint}
                 iconColor={{ default: inactiveTint, selected: activeTint }}
                 labelStyle={{
@@ -127,5 +130,6 @@ export default function Layout() {
                 </NativeTabs.Trigger>
             </NativeTabs>
         </ThemeProvider>
+        ) : <Redirect href="/auth/login" />
     );
 }
